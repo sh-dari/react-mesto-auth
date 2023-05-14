@@ -11,24 +11,26 @@ class Api {
     return Promise.reject(`Ошибка: ${result.status}`);
   }
 
+  _request(endpoint, options) {
+    return fetch(`${this.baseUrl + endpoint}`, options).then(res => this.getFetchAnswer(res))
+  }
+
   getInitialCards() {
-    return fetch(`${this.baseUrl}/cards`,
+    return this._request(`/cards`,
     {
       headers: this.headers
     })
-    .then(res => this.getFetchAnswer(res));
   }
 
   getUserInfo() {
-    return fetch(`${this.baseUrl}/users/me`,
+    return this._request(`/users/me`,
     {
       headers: this.headers
     })
-    .then(res => this.getFetchAnswer(res));
   }
 
   updateUserInfo(formData) {
-    return fetch(`${this.baseUrl}/users/me`,
+    return this._request(`/users/me`,
     {
       method: 'PATCH',
       headers: this.headers,
@@ -37,11 +39,10 @@ class Api {
         about: formData.about
       })
     })
-    .then(res => this.getFetchAnswer(res));
   }
 
   addNewCard(cardData) {
-    return fetch(`${this.baseUrl}/cards`,
+    return this._request(`/cards`,
     {
       method: 'POST',
       headers: this.headers,
@@ -50,47 +51,42 @@ class Api {
         link: cardData.link
       })
     })
-    .then(res => this.getFetchAnswer(res));
   }
 
   deleteCard(id) {
-    return fetch(`${this.baseUrl}/cards/${id}`,
+    return this._request(`/cards/${id}`,
     {
       method: 'DELETE',
       headers: this.headers
     })
-    .then(res => this.getFetchAnswer(res));
   }
 
   addLike(id) {
-    return fetch(`${this.baseUrl}/cards/${id}/likes`,
+    return this._request(`/cards/${id}/likes`,
     {
       method: 'PUT',
       headers: this.headers
     })
-    .then(res => this.getFetchAnswer(res));
   }
 
   deleteLike(id) {
-    return fetch(`${this.baseUrl}/cards/${id}/likes`,
+    return this._request(`/cards/${id}/likes`,
     {
       method: 'DELETE',
       headers: this.headers
     })
-    .then(res => this.getFetchAnswer(res));
   }
 
   changeLikeCardStatus(id, isLiked) {
-    return fetch(`${this.baseUrl}/cards/${id}/likes`,
+    return this._request(`/cards/${id}/likes`,
     {
       method: isLiked ? 'DELETE' : 'PUT',
       headers: this.headers
     })
-    .then(res => this.getFetchAnswer(res));
   }
 
   changeAvatar(link) {
-    return fetch(`${this.baseUrl}/users/me/avatar`,
+    return this._request(`/users/me/avatar`,
     {
       method: 'PATCH',
       headers: this.headers,
@@ -98,7 +94,6 @@ class Api {
         avatar: link
       })
     })
-    .then(res => this.getFetchAnswer(res));
   }
 
   getDataToLoadPage() {

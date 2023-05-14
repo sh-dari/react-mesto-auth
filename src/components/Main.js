@@ -13,14 +13,14 @@ function Main({
   onCardLike,
   onCardDelete,
   cards,
-  onRegistrationSubmit,
-  handleSuccessRegistration
+  handleAuthorize,
+  handleRegister
 }) {
 
   return(
     <main className="content">
       <Routes>
-        <Route path="/mesto-react" element={<Navigate to="/" replace />}/>
+        <Route path="/react-mesto-auth" element={<Navigate to="/" replace />}/>
         <Route path="/" element={
           <ProtectedRouteElement
             element={Profile}
@@ -33,8 +33,8 @@ function Main({
             cards={cards}
           />
         }/>
-        <Route path="/sign-up" element={<Register onRegistrationSubmit={onRegistrationSubmit} handleSuccessRegistration={handleSuccessRegistration}/>} />
-        <Route path="/sign-in" element={<Login />} />
+        <Route path="/sign-up" element={<Register handleRegister={handleRegister}/>} />
+        <Route path="/sign-in" element={<Login handleAuthorize={handleAuthorize} />} />
       </Routes>
     </main>
   );

@@ -6,7 +6,7 @@ import { AppContext } from '../contexts/AppContext';
 function Header({ userEmail, handleEmailClean }) {
   const { loggedIn } = useContext(AppContext);
   const navigate = useNavigate();
-  let location = useLocation();
+  const location = useLocation();
 
   const navigateToRegistration = () => {
     navigate('/sign-up');

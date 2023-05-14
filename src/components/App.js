@@ -39,12 +39,16 @@ function App() {
   const handleTokenCheck = useCallback(() => {
     if (localStorage.getItem('jwt')){
       const jwt = localStorage.getItem('jwt');
-      auth.checkToken(jwt).then((res) => {
+      auth.checkToken(jwt)
+      .then((res) => {
         if (res){
           setLoggedIn(true);
           navigate("/", {replace: true});
           setUserEmail(res.data.email);
         }
+      })
+      .catch((err) => {
+        console.log(err);
       });
     }
   }, [navigate]);
@@ -153,22 +157,44 @@ function App() {
     .finally(() => {
       setLoading(false);
     });
-  }
+  };
 
   const handleLogin = () => {
     setLoggedIn(true);
-  }
-  const handleSuccessRegistration = () => {
-    setSuccessRegistration(true);
-  }
+  };
 
   const handleEmailClean = () => {
     setLoggedIn(false);
     setUserEmail("");
-  }
+  };
 
-  const handleRegistrationClick = () => {
-    setIsRegistrationPopupOpen(true);
+  const handleAuthorize = (values, setValues) => {
+    auth.authorize(values.password, values.email)
+    .then((data) => {
+      if (data){
+        setValues({password: '', email: ''});
+        handleLogin();
+        navigate('/', {replace: true});
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
+
+  const handleRegister = (values) => {
+    auth.register(values.password, values.email)
+    .then((data) => {
+      setSuccessRegistration(true);
+      return data
+    })
+    .catch(err => {
+      console.log(err);
+      setSuccessRegistration(false);
+    })
+    .finally(() => {
+      setIsRegistrationPopupOpen(true);
+    });
   };
 
   return (
@@ -183,9 +209,9 @@ function App() {
             onCardClick={handleCardClick}
             onCardLike={handleCardLike}
             onCardDelete={handleCardDelete}
-            onRegistrationSubmit={handleRegistrationClick}
-            handleSuccessRegistration={handleSuccessRegistration}
             cards={cards}
+            handleAuthorize={handleAuthorize}
+            handleRegister={handleRegister}
           />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
